@@ -1,0 +1,23 @@
+[Unit]
+Description=Team Rocket Room Dashboard (lightweight local)
+After=network.target team-rocket.service
+Wants=team-rocket.service
+
+[Service]
+Type=simple
+# Point WorkingDirectory and ExecStart at wherever the dashboard folder
+# sits on the Pi (next to the project is fine). The log-dir points at
+# the running system's logs/ folder so the dashboard tails the same CSVs
+# the main service writes.
+WorkingDirectory=/home/rpi/team_rocket_iot/dashboard
+ExecStart=/usr/bin/python3 -u /home/rpi/team_rocket_iot/dashboard/app.py \
+    --mode live \
+    --log-dir /home/rpi/team_rocket_iot/logs \
+    --port 5000 \
+    --host 0.0.0.0
+User=rpi
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

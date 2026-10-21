@@ -1,0 +1,5 @@
+timestamp,bed_pad_raw,desk_pad_raw,bed_occupied,desk_occupied,light_raw,sound_spread,sound_instant_state,sound_committed_state,temperature_c,humidity_pct,temp_read_ok,score,mode,label
+2026-10-08T10:50:29,0.0,0.0,False,False,33.0,6.0,quiet,quiet,22.1,60.1,True,0.0,unoccupied,
+2026-10-08T10:50:35,0.0,0.0,False,False,33.0,6.0,quiet,quiet,22.2,60.1,True,0.0,unoccupied,
+2026-10-08T10:50:40,0.0,0.0,False,False,33.0,5.0,quiet,quiet,22.2,60.1,True,0.0,unoccupied,
+2026-10-08T10:50:46,0.0,0.0,False,False,33.0,6.0,quiet,quiet,22.1,60.1,True,0.0,unoccupied,

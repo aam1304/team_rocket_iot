@@ -1,0 +1,291 @@
+Starting Team Rocket room-mode monitor.
+Logging to sensor_log_2026-10-08_0106.csv
+Each cycle takes ~5 seconds. Ctrl+C to stop.
+
+bed=False desk=False light_raw= 73.0 sound_spread=10.0(gap   ->quiet ) temp=21.0C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 72.0 sound_spread=11.0(gap   ->quiet ) temp=21.1C score=  0.00 mode=unoccupied
+bed=False desk=True  light_raw= 71.0 sound_spread=11.0(gap   ->quiet ) temp=21.1C score=  3.00 mode=unoccupied
+bed=False desk=True  light_raw= 72.0 sound_spread=28.0(active->quiet ) temp=21.0C score=  5.70 mode=study
+bed=False desk=True  light_raw= 70.0 sound_spread=18.0(active->quiet ) temp=21.0C score=  8.13 mode=study
+bed=False desk=True  light_raw= 71.0 sound_spread=12.0(gap   ->quiet ) temp=21.0C score= 10.00 mode=study
+[WARN] DHT22 read failed: Checksum did not validate. Try again.
+bed=False desk=True  light_raw= 71.0 sound_spread=25.0(active->quiet ) temp= N/A  score= 10.00 mode=study
+bed=False desk=True  light_raw= 71.0 sound_spread=10.0(gap   ->quiet ) temp=21.0C score= 10.00 mode=study
+bed=False desk=True  light_raw= 72.0 sound_spread=29.0(active->quiet ) temp=21.0C score= 10.00 mode=study
+bed=False desk=True  light_raw= 71.0 sound_spread=20.0(active->quiet ) temp=21.0C score= 10.00 mode=study
+bed=False desk=True  light_raw= 71.0 sound_spread=12.0(gap   ->quiet ) temp=21.0C score= 10.00 mode=study
+bed=False desk=True  light_raw= 71.0 sound_spread=11.0(gap   ->quiet ) temp=21.0C score= 10.00 mode=study
+bed=False desk=True  light_raw= 71.0 sound_spread=11.0(gap   ->quiet ) temp=21.0C score= 10.00 mode=study
+bed=False desk=True  light_raw= 72.0 sound_spread=28.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=15.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=False light_raw= 72.0 sound_spread=16.0(active->active) temp=21.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 72.0 sound_spread= 8.0(quiet ->active) temp=21.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 71.0 sound_spread= 8.0(quiet ->active) temp=21.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 71.0 sound_spread=11.0(gap   ->active) temp=21.0C score= 10.00 mode=study
+bed=False desk=True  light_raw= 71.0 sound_spread=17.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=14.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=11.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=23.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=22.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=35.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=19.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=17.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=30.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=11.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=15.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=18.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=32.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=23.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 70.0 sound_spread=18.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=15.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 70.0 sound_spread=15.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=12.0(gap   ->active) temp=20.9C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=13.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=13.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=14.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=19.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=13.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=18.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=11.0(gap   ->active) temp=20.9C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=14.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=11.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=27.0(active->active) temp=20.9C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=10.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=11.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=27.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=16.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=16.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 73.0 sound_spread=13.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=18.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=30.0(active->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=14.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=13.0(gap   ->active) temp=20.9C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 72.0 sound_spread=10.0(gap   ->active) temp=21.0C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=28.0(active->active) temp=20.9C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=29.0(active->active) temp=20.9C score= 10.00 mode=relax
+bed=False desk=True  light_raw= 71.0 sound_spread=14.0(gap   ->active) temp=20.9C score= 10.00 mode=relax
+Starting Team Rocket room-mode monitor.
+Logging to sensor_log_2026-10-08_1011.csv
+Each cycle takes ~5 seconds. Ctrl+C to stop.
+
+bed=False desk=False light_raw= 36.0 sound_spread= 8.0(active->quiet ) temp=21.7C score=  2.00 mode=unoccupied
+bed=False desk=False light_raw= 36.0 sound_spread= 7.0(gap   ->quiet ) temp=21.7C score=  3.80 mode=unoccupied
+bed=False desk=False light_raw= 41.0 sound_spread=11.0(active->quiet ) temp=21.7C score=  5.42 mode=study
+bed=False desk=False light_raw= 35.0 sound_spread= 8.0(active->quiet ) temp=21.7C score=  6.88 mode=study
+bed=False desk=False light_raw= 39.0 sound_spread= 8.0(active->quiet ) temp=21.8C score=  8.19 mode=study
+bed=False desk=False light_raw= 41.0 sound_spread= 9.0(active->quiet ) temp=21.8C score=  9.37 mode=study
+bed=False desk=False light_raw= 39.0 sound_spread= 8.0(active->active) temp=21.8C score= 10.00 mode=study
+bed=True  desk=False light_raw= 37.0 sound_spread= 9.0(active->active) temp=21.8C score=  9.00 mode=relax
+bed=True  desk=False light_raw= 41.0 sound_spread=10.0(active->active) temp=21.8C score=  8.10 mode=relax
+bed=True  desk=False light_raw= 36.0 sound_spread=11.0(active->active) temp=21.8C score=  7.29 mode=relax
+bed=True  desk=False light_raw= 37.0 sound_spread=12.0(active->active) temp=21.8C score=  6.56 mode=relax
+bed=True  desk=False light_raw= 38.0 sound_spread= 9.0(active->active) temp=21.8C score=  5.90 mode=relax
+bed=True  desk=False light_raw= 36.0 sound_spread= 9.0(active->active) temp=21.8C score=  5.31 mode=relax
+bed=True  desk=False light_raw= 34.0 sound_spread= 9.0(active->active) temp=21.8C score=  4.78 mode=relax
+bed=False desk=False light_raw= 33.0 sound_spread=11.0(active->active) temp=21.8C score=  7.30 mode=study
+bed=False desk=False light_raw= 70.0 sound_spread= 7.0(gap   ->active) temp=21.8C score=  9.57 mode=study
+bed=False desk=False light_raw= 62.0 sound_spread= 8.0(active->active) temp=21.8C score= 10.00 mode=study
+bed=False desk=False light_raw= 49.0 sound_spread= 9.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 38.0 sound_spread= 8.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 41.0 sound_spread= 8.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 40.0 sound_spread= 8.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 39.0 sound_spread= 8.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 39.0 sound_spread= 9.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 40.0 sound_spread=10.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 39.0 sound_spread=10.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 39.0 sound_spread=10.0(active->active) temp=21.9C score= 10.00 mode=study
+bed=False desk=False light_raw= 39.0 sound_spread= 9.0(active->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 9.0(active->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread=10.0(active->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread=10.0(active->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->active) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+Starting Team Rocket room-mode monitor.
+Logging to sensor_log_2026-10-08_1015.csv
+Each cycle takes ~5 seconds. Ctrl+C to stop.
+
+bed=False desk=False light_raw= 41.0 sound_spread= 6.0(quiet ->quiet ) temp=22.0C score=  2.00 mode=unoccupied
+bed=False desk=False light_raw= 60.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score=  3.80 mode=unoccupied
+bed=False desk=False light_raw= 27.0 sound_spread= 4.0(quiet ->quiet ) temp=22.0C score=  5.42 mode=study
+bed=False desk=False light_raw= 28.0 sound_spread= 4.0(quiet ->quiet ) temp=22.0C score=  6.88 mode=study
+bed=False desk=False light_raw= 56.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score=  8.19 mode=study
+bed=False desk=False light_raw= 52.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score=  9.37 mode=study
+bed=False desk=False light_raw= 52.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 60.0 sound_spread= 6.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 59.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 53.0 sound_spread= 6.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 53.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score= 10.00 mode=study
+bed=False desk=False light_raw= 53.0 sound_spread= 6.0(quiet ->quiet ) temp=22.0C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 55.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 53.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 48.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 24.0 sound_spread= 5.0(quiet ->quiet ) temp=22.0C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 54.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 34.0 sound_spread= 4.0(quiet ->quiet ) temp=22.0C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 34.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score=  0.00 mode=unoccupied
+bed=True  desk=False light_raw= 36.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= -1.00 mode=unoccupied
+bed=True  desk=False light_raw= 36.0 sound_spread= 4.0(quiet ->quiet ) temp=22.1C score= -1.90 mode=unoccupied
+bed=True  desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= -2.71 mode=unoccupied
+bed=True  desk=False light_raw= 37.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= -3.44 mode=unoccupied
+bed=True  desk=False light_raw= 35.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= -4.10 mode=unoccupied
+bed=True  desk=False light_raw= 34.0 sound_spread= 6.0(quiet ->quiet ) temp=22.1C score= -4.69 mode=unoccupied
+bed=True  desk=False light_raw= 28.0 sound_spread= 4.0(quiet ->quiet ) temp=22.1C score= -5.22 mode=relax
+bed=False desk=False light_raw= 33.0 sound_spread= 7.0(gap   ->quiet ) temp=22.1C score= -2.70 mode=sleep
+bed=False desk=False light_raw= 34.0 sound_spread= 6.0(quiet ->quiet ) temp=22.1C score= -0.43 mode=sleep
+[WARN] DHT22 read failed: Checksum did not validate. Try again.
+bed=False desk=True  light_raw= 32.0 sound_spread= 6.0(quiet ->quiet ) temp= N/A  score=  4.62 mode=sleep
+[WARN] DHT22 read failed: Received unplausible data. Try again.
+bed=False desk=True  light_raw= 33.0 sound_spread= 7.0(gap   ->quiet ) temp= N/A  score=  9.16 mode=study
+bed=False desk=True  light_raw= 32.0 sound_spread= 6.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+[WARN] DHT22 read failed: Checksum did not validate. Try again.
+bed=False desk=True  light_raw= 35.0 sound_spread= 5.0(quiet ->quiet ) temp= N/A  score= 10.00 mode=study
+bed=False desk=True  light_raw= 36.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=True  light_raw= 37.0 sound_spread= 6.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=True  light_raw= 36.0 sound_spread= 7.0(gap   ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=True  light_raw= 37.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=True  light_raw= 50.0 sound_spread= 6.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=True  light_raw= 44.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=False light_raw= 50.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=False light_raw= 35.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=False light_raw= 37.0 sound_spread= 4.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=True  light_raw= 36.0 sound_spread= 6.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 38.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 36.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 37.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 36.0 sound_spread= 4.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 38.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 38.0 sound_spread= 5.0(quiet ->quiet ) temp=22.1C score= 10.00 mode=study
+bed=False desk=True  light_raw= 37.0 sound_spread= 4.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 32.0 sound_spread= 4.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 31.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 30.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 30.0 sound_spread= 4.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 30.0 sound_spread= 4.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+[WARN] DHT22 read failed: Checksum did not validate. Try again.
+bed=False desk=True  light_raw= 30.0 sound_spread= 5.0(quiet ->quiet ) temp= N/A  score= 10.00 mode=study
+bed=False desk=True  light_raw= 30.0 sound_spread= 4.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 30.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+Starting Team Rocket room-mode monitor.
+Logging to sensor_log_2026-10-08_1020.csv
+Each cycle takes ~5 seconds. Ctrl+C to stop.
+
+bed=False desk=False light_raw= 35.0 sound_spread= 7.0(gap   ->quiet ) temp=22.2C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 30.0 sound_spread= 7.0(gap   ->quiet ) temp=22.2C score=  0.00 mode=unoccupied
+bed=False desk=True  light_raw= 46.0 sound_spread= 7.0(gap   ->quiet ) temp=22.2C score=  5.00 mode=study
+bed=False desk=True  light_raw= 50.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score=  9.50 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 6.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 4.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 46.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=True  light_raw= 25.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score= 10.00 mode=study
+bed=False desk=False light_raw= 23.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score=  0.00 mode=study
+bed=False desk=False light_raw= 25.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score=  0.00 mode=study
+bed=False desk=False light_raw= 23.0 sound_spread= 6.0(quiet ->quiet ) temp=22.2C score=  0.00 mode=study
+bed=False desk=False light_raw= 23.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score=  0.00 mode=study
+bed=False desk=False light_raw= 21.0 sound_spread= 5.0(quiet ->quiet ) temp=22.2C score=  0.00 mode=study
+bed=False desk=False light_raw= 21.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+[WARN] DHT22 read failed: Checksum did not validate. Try again.
+bed=False desk=False light_raw= 22.0 sound_spread= 5.0(quiet ->quiet ) temp= N/A  score=  0.00 mode=study
+bed=False desk=False light_raw= 22.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 22.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 22.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 41.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 40.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 45.0 sound_spread= 9.0(active->quiet ) temp=22.3C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 46.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 22.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 31.0 sound_spread= 7.0(gap   ->quiet ) temp=22.3C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 21.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 20.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 22.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 45.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=unoccupied
+bed=True  desk=False light_raw= 47.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= -1.00 mode=relax
+bed=True  desk=False light_raw= 44.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= -1.90 mode=relax
+bed=True  desk=False light_raw= 48.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= -2.71 mode=relax
+bed=True  desk=False light_raw= 47.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= -3.44 mode=relax
+bed=True  desk=False light_raw= 47.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= -4.10 mode=relax
+bed=True  desk=False light_raw= 45.0 sound_spread= 7.0(gap   ->quiet ) temp=22.4C score= -4.69 mode=relax
+bed=True  desk=False light_raw= 44.0 sound_spread= 4.0(quiet ->quiet ) temp=22.4C score= -5.22 mode=relax
+bed=True  desk=False light_raw= 29.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= -5.70 mode=relax
+bed=True  desk=False light_raw= 27.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= -6.13 mode=relax
+bed=True  desk=False light_raw= 22.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= -6.51 mode=relax
+bed=True  desk=False light_raw= 31.0 sound_spread= 7.0(gap   ->quiet ) temp=22.4C score= -6.86 mode=relax
+bed=True  desk=False light_raw= 24.0 sound_spread= 9.0(active->quiet ) temp=22.4C score= -7.18 mode=relax
+bed=True  desk=False light_raw= 32.0 sound_spread= 8.0(active->quiet ) temp=22.4C score= -7.46 mode=relax
+bed=False desk=False light_raw= 32.0 sound_spread=10.0(active->quiet ) temp=22.4C score=  0.00 mode=sleep
+bed=False desk=True  light_raw= 30.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score=  5.00 mode=study
+bed=False desk=True  light_raw= 32.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score=  9.50 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 35.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 7.0(gap   ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 35.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 35.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 37.0 sound_spread= 7.0(gap   ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 39.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 34.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=True  light_raw= 33.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 29.0 sound_spread= 4.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 28.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=True  light_raw= 27.0 sound_spread= 7.0(gap   ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 31.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+bed=False desk=True  light_raw= 29.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score= 10.00 mode=study
+Starting Team Rocket room-mode monitor.
+Logging to sensor_log_2026-10-08_1026.csv
+Each cycle takes ~5 seconds. Ctrl+C to stop.
+
+bed=False desk=False light_raw= 31.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 28.0 sound_spread=20.0(active->quiet ) temp=22.3C score=  0.00 mode=unoccupied
+bed=False desk=True  light_raw= 32.0 sound_spread= 7.0(gap   ->quiet ) temp=22.3C score=  5.00 mode=study
+bed=False desk=True  light_raw= 32.0 sound_spread=12.0(active->quiet ) temp=22.3C score=  9.50 mode=study
+bed=False desk=True  light_raw= 25.0 sound_spread= 7.0(gap   ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=True  light_raw= 31.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=True  light_raw= 30.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=True  light_raw= 28.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=True  light_raw= 25.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=True  light_raw= 26.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score= 10.00 mode=study
+bed=False desk=False light_raw= 25.0 sound_spread= 7.0(gap   ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 26.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 26.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 26.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 26.0 sound_spread= 8.0(active->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 27.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 27.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 27.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=False desk=False light_raw= 28.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=study
+bed=True  desk=False light_raw= 27.0 sound_spread= 4.0(quiet ->quiet ) temp=22.3C score= -1.00 mode=relax
+bed=True  desk=False light_raw= 27.0 sound_spread= 7.0(gap   ->quiet ) temp=22.3C score= -1.90 mode=relax
+bed=True  desk=False light_raw= 27.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score= -2.71 mode=relax
+bed=True  desk=False light_raw= 28.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score= -3.44 mode=relax
+bed=True  desk=False light_raw= 27.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score= -4.10 mode=relax
+bed=True  desk=False light_raw= 27.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score= -4.69 mode=relax
+bed=True  desk=False light_raw= 25.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score= -5.22 mode=relax
+bed=True  desk=False light_raw= 29.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score= -5.70 mode=relax
+bed=True  desk=False light_raw= 24.0 sound_spread= 6.0(quiet ->quiet ) temp=22.3C score= -6.13 mode=relax
+bed=True  desk=False light_raw= 25.0 sound_spread= 8.0(active->quiet ) temp=22.3C score= -6.51 mode=relax
+bed=True  desk=False light_raw= 28.0 sound_spread=10.0(active->quiet ) temp=22.3C score= -6.86 mode=relax
+bed=False desk=False light_raw= 24.0 sound_spread= 7.0(gap   ->quiet ) temp=22.3C score=  0.00 mode=relax
+bed=False desk=False light_raw= 24.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=relax
+bed=False desk=False light_raw= 24.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=relax
+bed=False desk=False light_raw= 32.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=relax
+bed=False desk=False light_raw= 49.0 sound_spread= 5.0(quiet ->quiet ) temp=22.3C score=  0.00 mode=relax
+bed=False desk=False light_raw= 28.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=relax
+bed=False desk=False light_raw= 29.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=relax
+bed=False desk=False light_raw= 32.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=relax
+bed=False desk=False light_raw= 26.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=relax
+bed=False desk=False light_raw= 26.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=relax
+bed=False desk=False light_raw= 26.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=relax
+bed=False desk=False light_raw= 27.0 sound_spread= 6.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 27.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 31.0 sound_spread= 4.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=unoccupied
+bed=False desk=False light_raw= 33.0 sound_spread= 4.0(quiet ->quiet ) temp=22.4C score=  0.00 mode=unoccupied
+bed=False desk=True  light_raw= 34.0 sound_spread= 5.0(quiet ->quiet ) temp=22.4C score=  5.00 mode=study

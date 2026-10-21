@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.env
+sensor_log_*.csv
+mode_transitions_*.csv
+simulated_log.csv
+simulated_mode_transitions.csv
+
+# OS / OneDrive / editor junk
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+.idea/
+.vscode/
+*~

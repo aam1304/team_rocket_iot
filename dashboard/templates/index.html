@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Team Rocket Room Monitor</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="/static/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #1a1d24;
+      --panel2: #22262f;
+      --fg: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #60a5fa;
+      --study: #22c55e;
+      --sleep: #3b82f6;
+      --relax: #f59e0b;
+      --unoccupied: #ef4444;
+      --border: #2a2f3a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg); color: var(--fg); font-size: 14px;
+    }
+    header {
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: baseline; gap: 16px;
+    }
+    header h1 { margin: 0; font-size: 18px; font-weight: 600; }
+    header .meta { color: var(--muted); font-size: 12px; }
+    nav {
+      display: flex; gap: 2px; padding: 0 20px; border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+    nav button {
+      background: transparent; color: var(--muted); border: 0; padding: 10px 16px;
+      font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent;
+    }
+    nav button.active { color: var(--fg); border-bottom-color: var(--accent); }
+    main { padding: 20px; }
+    .grid { display: grid; gap: 14px; }
+    .grid-live { grid-template-columns: 1fr 1fr 1fr; }
+    .grid-analysis { grid-template-columns: 2fr 3fr; }
+    @media (max-width: 900px) { .grid-live, .grid-analysis { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+      padding: 14px;
+    }
+    .card h2 {
+      margin: 0 0 10px; font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted);
+    }
+    .mode-tile { font-size: 42px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; margin: 4px 0; }
+    .mode-study { color: var(--study); }
+    .mode-sleep { color: var(--sleep); }
+    .mode-relax { color: var(--relax); }
+    .mode-unoccupied { color: var(--unoccupied); }
+    .mode-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+    .readings { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .reading { background: var(--panel2); padding: 8px 10px; border-radius: 6px; }
+    .reading .label { font-size: 11px; color: var(--muted); text-transform: uppercase; }
+    .reading .value { font-size: 18px; font-weight: 600; margin-top: 2px; }
+    .score-bar { height: 8px; background: var(--panel2); border-radius: 4px; overflow: hidden; margin-top: 8px; position: relative; }
+    .score-fill { position: absolute; left: 50%; width: 2px; height: 100%; background: var(--muted); }
+    .score-fg { position: absolute; top: 0; height: 100%; background: var(--accent); }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 500; font-size: 11px; text-transform: uppercase; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .footer-note { color: var(--muted); font-size: 11px; margin-top: 6px; }
+    .chart-wrap { position: relative; height: 260px; }
+    .chart-wide { height: 320px; }
+    .scroll { max-height: 320px; overflow-y: auto; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .pill-study { background: rgba(34,197,94,0.18); color: var(--study); }
+    .pill-sleep { background: rgba(59,130,246,0.18); color: var(--sleep); }
+    .pill-relax { background: rgba(245,158,11,0.18); color: var(--relax); }
+    .pill-unoccupied { background: rgba(239,68,68,0.18); color: var(--unoccupied); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Team Rocket Room Monitor</h1>
+    <span class="meta">COMP728 · Semester 2, 2026</span>
+    <span class="meta" id="source-label"></span>
+    <span class="meta" style="margin-left: auto;" id="updated"></span>
+  </header>
+  <nav>
+    <button id="tab-live" class="active" onclick="selectTab('live')">Live monitor</button>
+    <button id="tab-analysis" onclick="selectTab('analysis')">Analysis</button>
+  </nav>
+  <main>
+    <div id="view-live">
+      <div class="grid grid-live">
+        <div class="card">
+          <h2>Current mode</h2>
+          <div class="mode-tile" id="mode-tile">...</div>
+          <div style="color: var(--muted); font-size: 12px;" id="mode-ts"></div>
+          <div class="score-bar">
+            <div class="score-fill"></div>
+            <div class="score-fg" id="score-fg" style="left: 50%; width: 0;"></div>
+          </div>
+          <div class="footer-note">Running score (− sleep … + study). Clamped to ±10.</div>
+        </div>
+        <div class="card">
+          <h2>Latest sensor readings</h2>
+          <div class="readings">
+            <div class="reading"><div class="label">Bed pad</div><div class="value" id="r-bed">—</div></div>
+            <div class="reading"><div class="label">Desk pad</div><div class="value" id="r-desk">—</div></div>
+            <div class="reading"><div class="label">Light (0=bright,255=dark)</div><div class="value" id="r-light">—</div></div>
+            <div class="reading"><div class="label">Sound state</div><div class="value" id="r-sound">—</div></div>
+            <div class="reading"><div class="label">Temp</div><div class="value" id="r-temp">—</div></div>
+            <div class="reading"><div class="label">Humidity</div><div class="value" id="r-hum">—</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Recent mode transitions</h2>
+          <div class="scroll">
+            <table>
+              <thead><tr><th>Time</th><th>From</th><th>To</th></tr></thead>
+              <tbody id="transitions-body"><tr><td colspan="3" style="color:var(--muted)">Waiting for first transition...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 14px;">
+        <h2>Mode over the recent window</h2>
+        <div class="chart-wrap chart-wide"><canvas id="chart-history"></canvas></div>
+        <div class="footer-note" id="history-note"></div>
+      </div>
+    </div>
+
+    <div id="view-analysis" style="display:none;">
+      <div class="grid grid-analysis">
+        <div class="card">
+          <h2>Collection summary</h2>
+          <div id="analysis-summary" style="color:var(--muted);">Loading...</div>
+          <table style="margin-top: 10px;">
+            <thead><tr><th>Mode</th><th class="num">System hrs</th><th class="num">GT hrs</th><th class="num">Matched</th></tr></thead>
+            <tbody id="per-mode-body"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h2>Mode share across the week</h2>
+          <div class="chart-wrap"><canvas id="chart-share"></canvas></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 14px;">
+        <h2>Confusion matrix · ground truth row vs system column</h2>
+        <table>
+          <thead><tr><th>Ground truth ↓ / System →</th><th class="num">sleep</th><th class="num">study</th><th class="num">relax</th><th class="num">unoccupied</th><th class="num">row total</th></tr></thead>
+          <tbody id="confusion-body"></tbody>
+        </table>
+        <div class="footer-note">Rows are what actually happened in the room (hand-logged ground truth); columns are what the system inferred. Diagonal cells are correct matches.</div>
+      </div>
+    </div>
+  </main>
+
+<script>
+const MODES = ["sleep", "study", "relax", "unoccupied"];
+const MODE_COLORS = {
+  sleep: getComputedStyle(document.documentElement).getPropertyValue('--sleep').trim(),
+  study: getComputedStyle(document.documentElement).getPropertyValue('--study').trim(),
+  relax: getComputedStyle(document.documentElement).getPropertyValue('--relax').trim(),
+  unoccupied: getComputedStyle(document.documentElement).getPropertyValue('--unoccupied').trim(),
+};
+function selectTab(name) {
+  document.getElementById('view-live').style.display = (name === 'live') ? '' : 'none';
+  document.getElementById('view-analysis').style.display = (name === 'analysis') ? '' : 'none';
+  document.getElementById('tab-live').classList.toggle('active', name === 'live');
+  document.getElementById('tab-analysis').classList.toggle('active', name === 'analysis');
+  if (name === 'analysis' && !analysisLoaded) loadAnalysis();
+  if (name === 'live' && !historyLoaded) loadHistory();
+}
+
+let historyChart = null;
+let shareChart = null;
+let analysisLoaded = false;
+let historyLoaded = false;
+
+async function tickLive() {
+  try {
+    const r = await fetch('/api/live');
+    const d = await r.json();
+    document.getElementById('source-label').textContent = d.source || '';
+    if (d.replay_at) document.getElementById('updated').textContent = 'Replay at ' + d.replay_at;
+    else document.getElementById('updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    const row = d.latest;
+    if (row) {
+      const tile = document.getElementById('mode-tile');
+      tile.textContent = row.mode;
+      tile.className = 'mode-tile mode-' + row.mode;
+      document.getElementById('mode-ts').textContent = row.timestamp;
+      const score = row.score != null ? Number(row.score) : 0;
+      const pct = Math.max(-10, Math.min(10, score));
+      const fg = document.getElementById('score-fg');
+      if (pct >= 0) { fg.style.left = '50%'; fg.style.width = (pct / 10 * 50) + '%'; fg.style.background = MODE_COLORS.study; }
+      else { fg.style.left = (50 + pct / 10 * 50) + '%'; fg.style.width = (-pct / 10 * 50) + '%'; fg.style.background = MODE_COLORS.sleep; }
+      document.getElementById('r-bed').innerHTML = (row.bed_occupied ? '<span class="pill pill-sleep">OCCUPIED</span> ' : '') + (row.bed_pad_raw ?? '-');
+      document.getElementById('r-desk').innerHTML = (row.desk_occupied ? '<span class="pill pill-study">OCCUPIED</span> ' : '') + (row.desk_pad_raw ?? '-');
+      document.getElementById('r-light').textContent = row.light_raw ?? '-';
+      document.getElementById('r-sound').textContent = row.sound_committed_state || '-';
+      document.getElementById('r-temp').textContent = row.temperature_c != null ? row.temperature_c.toFixed(1) + ' °C' : '-';
+      document.getElementById('r-hum').textContent = row.humidity_pct != null ? row.humidity_pct.toFixed(1) + ' %' : '-';
+    }
+    const tb = document.getElementById('transitions-body');
+    if (d.transitions && d.transitions.length) {
+      tb.innerHTML = d.transitions.map(t => `<tr><td>${t.timestamp.replace('T',' ')}</td><td><span class="pill pill-${t.old_mode}">${t.old_mode}</span></td><td><span class="pill pill-${t.new_mode}">${t.new_mode}</span></td></tr>`).join('');
+    }
+  } catch (e) { console.error(e); }
+}
+
+async function loadHistory() {
+  try {
+    const r = await fetch('/api/history');
+    const d = await r.json();
+    historyLoaded = true;
+    const rows = d.rows || [];
+    document.getElementById('history-note').textContent = `${d.total.toLocaleString()} rows in buffer, showing ${rows.length.toLocaleString()}.`;
+    const yLabels = ['unoccupied', 'sleep', 'relax', 'study'];
+    const modeIndex = (m) => yLabels.indexOf(m);
+    const points = rows.map(r => ({ x: r.timestamp, y: yLabels[modeIndex(r.mode)] || 'unoccupied', mode: r.mode }));
+    if (historyChart) historyChart.destroy();
+    const ctx = document.getElementById('chart-history').getContext('2d');
+    historyChart = new Chart(ctx, {
+      type: 'scatter',
+      data: { datasets: [{
+        data: points,
+        pointRadius: 2,
+        pointBackgroundColor: points.map(p => MODE_COLORS[p.mode] || '#888'),
+      }] },
+      options: {
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => c.raw.mode + ' at ' + c.raw.x } } },
+        scales: {
+          x: { type: 'category', ticks: { color: '#9ca3af', maxTicksLimit: 10 }, grid: { color: '#2a2f3a' } },
+          y: { type: 'category', labels: yLabels, offset: true, ticks: { color: '#9ca3af' }, grid: { color: '#2a2f3a' } }
+        }
+      }
+    });
+  } catch (e) { console.error(e); }
+}
+
+async function loadAnalysis() {
+  try {
+    const r = await fetch('/api/analysis');
+    const d = await r.json();
+    analysisLoaded = true;
+    if (!d.available) {
+      document.getElementById('analysis-summary').textContent = 'No analysis file loaded. Pass --analysis path/to/analysis_results.json.';
+      return;
+    }
+    const a = d.data;
+    document.getElementById('analysis-summary').innerHTML =
+      `<strong style="color:var(--fg); font-size: 18px;">${a.overall_matched_pct}%</strong> overall match against the hand-logged ground truth, across ${a.rows_in_truth.toLocaleString()} rows (${a.total_rows.toLocaleString()} usable rows after excluding the NULLED window and the incomplete file-tail row).`;
+    const tb = document.getElementById('per-mode-body');
+    tb.innerHTML = a.per_mode.map(pm => `<tr>
+      <td><span class="mode-dot" style="background:${MODE_COLORS[pm.mode]}"></span>${pm.mode}</td>
+      <td class="num">${pm.system_hours.toFixed(1)}</td>
+      <td class="num">${pm.truth_hours.toFixed(1)}</td>
+      <td class="num"><strong>${pm.matched_pct ?? '—'}%</strong></td>
+    </tr>`).join('');
+    const cm = a.confusion;
+    document.getElementById('confusion-body').innerHTML = MODES.map(gt => {
+      const row = cm[gt];
+      const total = MODES.reduce((s, m) => s + (row[m] || 0), 0);
+      return `<tr>
+        <td><span class="pill pill-${gt}">${gt}</span></td>
+        ${MODES.map(sys => {
+          const n = row[sys] || 0;
+          const highlight = (gt === sys) ? ' style="color:var(--study);font-weight:600"' : '';
+          return `<td class="num"${highlight}>${n.toLocaleString()}</td>`;
+        }).join('')}
+        <td class="num">${total.toLocaleString()}</td>
+      </tr>`;
+    }).join('');
+    // Share chart
+    if (shareChart) shareChart.destroy();
+    const sctx = document.getElementById('chart-share').getContext('2d');
+    shareChart = new Chart(sctx, {
+      type: 'doughnut',
+      data: {
+        labels: a.per_mode.map(pm => pm.mode),
+        datasets: [{
+          data: a.per_mode.map(pm => pm.system_hours),
+          backgroundColor: a.per_mode.map(pm => MODE_COLORS[pm.mode]),
+          borderColor: '#1a1d24',
+        }],
+      },
+      options: {
+        plugins: {
+          legend: { position: 'right', labels: { color: '#e5e7eb' } },
+          tooltip: { callbacks: { label: (c) => `${c.label}: ${c.parsed.toFixed(1)} h` } },
+        }
+      }
+    });
+  } catch (e) { console.error(e); }
+}
+
+tickLive();
+setInterval(tickLive, 2000);
+setInterval(() => { if (document.getElementById('view-live').style.display !== 'none') loadHistory(); }, 10000);
+loadHistory();
+</script>
+</body>
+</html>

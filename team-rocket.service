@@ -1,0 +1,22 @@
+[Unit]
+Description=Team Rocket Room Mode Monitor
+After=network.target
+
+[Service]
+Type=simple
+# Update these two paths to match wherever the project actually
+# lives on the Pi, and the username it should run as.
+WorkingDirectory=/home/rpi/team_rocket_iot
+ExecStart=/usr/bin/python3 -u /home/rpi/team_rocket_iot/main.py
+User=rpi
+Restart=on-failure
+RestartSec=5
+
+# Loads DISCORD_WEBHOOK_URL (and anything else secret) from a file
+# that is NOT part of the git repo - see SYSTEMD_SETUP.md for how to
+# create it. Never put the real webhook URL directly in this file,
+# since this one does get committed to GitHub.
+EnvironmentFile=-/home/rpi/team_rocket_iot/.env
+
+[Install]
+WantedBy=multi-user.target

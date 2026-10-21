@@ -1,0 +1,73 @@
+{
+  "total_rows": 118106,
+  "rows_in_truth": 118098,
+  "overall_matched_pct": 89.1,
+  "per_mode": [
+    {
+      "mode": "sleep",
+      "system_rows": 34021,
+      "system_hours": 47.25,
+      "system_share_pct": 28.8,
+      "truth_rows": 35790,
+      "truth_hours": 49.71,
+      "truth_share_pct": 30.3,
+      "matched_pct": 94.8
+    },
+    {
+      "mode": "study",
+      "system_rows": 21268,
+      "system_hours": 29.54,
+      "system_share_pct": 18.0,
+      "truth_rows": 17237,
+      "truth_hours": 23.94,
+      "truth_share_pct": 14.6,
+      "matched_pct": 83.4
+    },
+    {
+      "mode": "relax",
+      "system_rows": 34194,
+      "system_hours": 47.49,
+      "system_share_pct": 29.0,
+      "truth_rows": 37713,
+      "truth_hours": 52.38,
+      "truth_share_pct": 31.9,
+      "matched_pct": 80.5
+    },
+    {
+      "mode": "unoccupied",
+      "system_rows": 28623,
+      "system_hours": 39.75,
+      "system_share_pct": 24.2,
+      "truth_rows": 27358,
+      "truth_hours": 38.0,
+      "truth_share_pct": 23.2,
+      "matched_pct": 97.0
+    }
+  ],
+  "confusion": {
+    "sleep": {
+      "sleep": 33932,
+      "study": 34,
+      "relax": 1289,
+      "unoccupied": 535
+    },
+    "study": {
+      "sleep": 0,
+      "study": 14376,
+      "relax": 2161,
+      "unoccupied": 700
+    },
+    "relax": {
+      "sleep": 79,
+      "study": 6443,
+      "relax": 30354,
+      "unoccupied": 837
+    },
+    "unoccupied": {
+      "sleep": 10,
+      "study": 415,
+      "relax": 390,
+      "unoccupied": 26543
+    }
+  }
+}
