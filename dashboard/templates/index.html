@@ -284,10 +284,10 @@ async function loadAnalysis() {
     shareChart = new Chart(sctx, {
       type: 'doughnut',
       data: {
-        labels: a.per_mode.map(pm => pm.mode),
+        labels: perMode.map(pm => pm.mode),
         datasets: [{
-          data: a.per_mode.map(pm => pm.system_hours),
-          backgroundColor: a.per_mode.map(pm => MODE_COLORS[pm.mode]),
+          data: perMode.map(pm => pm.system_hours),
+          backgroundColor: perMode.map(pm => MODE_COLORS[pm.mode]),
           borderColor: '#1a1d24',
         }],
       },
