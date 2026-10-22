@@ -1,73 +1,142 @@
 {
-  "total_rows": 118106,
-  "rows_in_truth": 118098,
-  "overall_matched_pct": 89.1,
-  "per_mode": [
+  "per_mode": {
+    "sleep": {
+      "ground_truth_h": 55.0,
+      "logged_h": 52.6,
+      "correct_h": 52.5,
+      "precision_pct": 99.7,
+      "recall_pct": 95.4,
+      "f1_pct": 97.5
+    },
+    "study": {
+      "ground_truth_h": 25.9,
+      "logged_h": 31.2,
+      "correct_h": 21.8,
+      "precision_pct": 69.7,
+      "recall_pct": 84.0,
+      "f1_pct": 76.2
+    },
+    "relax": {
+      "ground_truth_h": 55.3,
+      "logged_h": 50.3,
+      "correct_h": 44.7,
+      "precision_pct": 88.9,
+      "recall_pct": 81.0,
+      "f1_pct": 84.7
+    },
+    "unoccupied": {
+      "ground_truth_h": 38.5,
+      "logged_h": 40.5,
+      "correct_h": 37.3,
+      "precision_pct": 92.1,
+      "recall_pct": 96.9,
+      "f1_pct": 94.4
+    }
+  },
+  "overall": {
+    "ground_truth_h": 174.7,
+    "logged_h": 174.7,
+    "correct_h": 156.3,
+    "precision_pct": 89.5,
+    "recall_pct": 89.5,
+    "f1_pct": 88.2
+  },
+  "per_day_agreement_pct": {
+    "1": 93.4,
+    "2": 91.9,
+    "3": 84.4,
+    "4": 87.5,
+    "5": 89.0,
+    "6": 87.4,
+    "7": 93.4
+  },
+  "confusion_hours": {
+    "sleep": {
+      "sleep": 52.46,
+      "study": 0.05,
+      "relax": 2.05,
+      "unoccupied": 0.45
+    },
+    "study": {
+      "sleep": 0.0,
+      "study": 21.79,
+      "relax": 2.91,
+      "unoccupied": 1.23
+    },
+    "relax": {
+      "sleep": 0.12,
+      "study": 8.87,
+      "relax": 44.74,
+      "unoccupied": 1.54
+    },
+    "unoccupied": {
+      "sleep": 0.01,
+      "study": 0.54,
+      "relax": 0.63,
+      "unoccupied": 37.31
+    }
+  },
+  "overall_matched_pct": 89.5,
+  "total_rows": 118591,
+  "rows_in_truth": 118591,
+  "per_mode_legacy": [
     {
       "mode": "sleep",
-      "system_rows": 34021,
-      "system_hours": 47.25,
-      "system_share_pct": 28.8,
-      "truth_rows": 35790,
-      "truth_hours": 49.71,
-      "truth_share_pct": 30.3,
-      "matched_pct": 94.8
+      "system_hours": 52.6,
+      "truth_hours": 55.0,
+      "matched_pct": 95.4,
+      "system_share_pct": 30.1,
+      "truth_share_pct": 31.5
     },
     {
       "mode": "study",
-      "system_rows": 21268,
-      "system_hours": 29.54,
-      "system_share_pct": 18.0,
-      "truth_rows": 17237,
-      "truth_hours": 23.94,
-      "truth_share_pct": 14.6,
-      "matched_pct": 83.4
+      "system_hours": 31.2,
+      "truth_hours": 25.9,
+      "matched_pct": 84.0,
+      "system_share_pct": 17.9,
+      "truth_share_pct": 14.8
     },
     {
       "mode": "relax",
-      "system_rows": 34194,
-      "system_hours": 47.49,
-      "system_share_pct": 29.0,
-      "truth_rows": 37713,
-      "truth_hours": 52.38,
-      "truth_share_pct": 31.9,
-      "matched_pct": 80.5
+      "system_hours": 50.3,
+      "truth_hours": 55.3,
+      "matched_pct": 81.0,
+      "system_share_pct": 28.8,
+      "truth_share_pct": 31.7
     },
     {
       "mode": "unoccupied",
-      "system_rows": 28623,
-      "system_hours": 39.75,
-      "system_share_pct": 24.2,
-      "truth_rows": 27358,
-      "truth_hours": 38.0,
-      "truth_share_pct": 23.2,
-      "matched_pct": 97.0
+      "system_hours": 40.5,
+      "truth_hours": 38.5,
+      "matched_pct": 96.9,
+      "system_share_pct": 23.2,
+      "truth_share_pct": 22.0
     }
   ],
   "confusion": {
     "sleep": {
-      "sleep": 33932,
-      "study": 34,
-      "relax": 1289,
-      "unoccupied": 535
+      "sleep": 188859,
+      "study": 184,
+      "relax": 7382,
+      "unoccupied": 1635
     },
     "study": {
       "sleep": 0,
-      "study": 14376,
-      "relax": 2161,
-      "unoccupied": 700
+      "study": 78444,
+      "relax": 10470,
+      "unoccupied": 4420
     },
     "relax": {
-      "sleep": 79,
-      "study": 6443,
-      "relax": 30354,
-      "unoccupied": 837
+      "sleep": 432,
+      "study": 31936,
+      "relax": 161078,
+      "unoccupied": 5534
     },
     "unoccupied": {
-      "sleep": 10,
-      "study": 415,
-      "relax": 390,
-      "unoccupied": 26543
+      "sleep": 54,
+      "study": 1927,
+      "relax": 2273,
+      "unoccupied": 134332
     }
   }
 }

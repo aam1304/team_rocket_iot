@@ -1,34 +1,34 @@
 """
 analysis.py
 -----------
-Compare the sensor log modes against the hand-written ground truth
-record for the Team Rocket collection week. Produces:
-- mode share across all usable rows
-- matched % per mode (how often the system's inferred mode agreed
-  with the ground truth label at each row's timestamp)
-- confusion matrix (ground truth row vs system column)
-- writes everything to analysis_results.json for the dashboard
+Compare the Team Rocket sensor logs against the hand-written ground
+truth, with fault windows removed from both sides. Produces the same
+tables the team's Colab notebook produces:
+
+  per-mode:  ground_truth_h, logged_h, correct_h, precision_pct,
+             recall_pct, f1_pct
+  overall:   totals, micro-precision = micro-recall = overall
+             agreement, macro F1
+  per-day:   weighted agreement % for each 24-hour block from the first
+             sensor timestamp
+
+Also writes analysis_results.json for the dashboard's Analysis tab.
 
 Usage:
     python3 analysis.py --log-dir /path/to/csvs
 """
 
 import argparse
+import bisect
 import csv
 import glob
 import json
 import os
-import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-
-# ---------- Ground truth, transcribed from the handoff files ----------
-# Format: (start_iso, end_iso, activity). Times in NZDT (local; CSVs
-# are also local).
-
+# ---------------- Ground truth (104 entries, parsed from Ground_Truth_Log_7_Days.docx) ----------------
 GROUND_TRUTH = [
-    # Day 1 — Thu 8 Oct
     ("2026-10-08T11:31:00", "2026-10-08T12:43:00", "study"),
     ("2026-10-08T12:43:00", "2026-10-08T13:10:00", "relax"),
     ("2026-10-08T13:10:00", "2026-10-08T14:18:00", "study"),
@@ -38,11 +38,11 @@ GROUND_TRUTH = [
     ("2026-10-08T16:04:00", "2026-10-08T19:48:00", "unoccupied"),
     ("2026-10-08T19:48:00", "2026-10-08T20:09:00", "study"),
     ("2026-10-08T20:09:00", "2026-10-09T00:10:00", "relax"),
-    # Day 2 — Fri 9 Oct
     ("2026-10-09T00:10:00", "2026-10-09T00:44:00", "unoccupied"),
     ("2026-10-09T00:44:00", "2026-10-09T08:20:00", "sleep"),
     ("2026-10-09T08:20:00", "2026-10-09T10:51:00", "unoccupied"),
-    ("2026-10-09T10:51:00", "2026-10-09T12:07:00", "relax"),
+    ("2026-10-09T10:51:00", "2026-10-09T11:30:00", "relax"),
+    ("2026-10-09T11:30:00", "2026-10-09T12:07:00", "relax"),
     ("2026-10-09T12:07:00", "2026-10-09T13:18:00", "unoccupied"),
     ("2026-10-09T13:18:00", "2026-10-09T13:26:00", "study"),
     ("2026-10-09T13:26:00", "2026-10-09T13:32:00", "unoccupied"),
@@ -52,10 +52,10 @@ GROUND_TRUTH = [
     ("2026-10-09T21:33:00", "2026-10-09T23:08:00", "relax"),
     ("2026-10-09T23:08:00", "2026-10-09T23:33:00", "unoccupied"),
     ("2026-10-09T23:33:00", "2026-10-10T00:53:00", "relax"),
-    # Day 3 — Sat 10 Oct
     ("2026-10-10T00:53:00", "2026-10-10T01:02:00", "unoccupied"),
     ("2026-10-10T01:02:00", "2026-10-10T08:13:00", "sleep"),
-    ("2026-10-10T08:13:00", "2026-10-10T13:39:00", "unoccupied"),
+    ("2026-10-10T08:13:00", "2026-10-10T11:30:00", "unoccupied"),
+    ("2026-10-10T11:30:00", "2026-10-10T13:39:00", "unoccupied"),
     ("2026-10-10T13:39:00", "2026-10-10T13:58:00", "study"),
     ("2026-10-10T13:58:00", "2026-10-10T14:32:00", "unoccupied"),
     ("2026-10-10T14:32:00", "2026-10-10T15:38:00", "relax"),
@@ -69,14 +69,14 @@ GROUND_TRUTH = [
     ("2026-10-10T21:05:00", "2026-10-10T21:20:00", "unoccupied"),
     ("2026-10-10T21:20:00", "2026-10-10T23:20:00", "relax"),
     ("2026-10-10T23:20:00", "2026-10-11T01:32:00", "study"),
-    # Day 4 — Sun 11 Oct / Mon 12 / Tue 13
     ("2026-10-11T01:32:00", "2026-10-11T11:04:00", "sleep"),
     ("2026-10-11T11:04:00", "2026-10-11T11:19:00", "unoccupied"),
-    ("2026-10-11T11:19:00", "2026-10-11T12:26:00", "study"),
+    ("2026-10-11T11:19:00", "2026-10-11T11:30:00", "study"),
+    ("2026-10-11T11:30:00", "2026-10-11T12:26:00", "study"),
     ("2026-10-11T12:26:00", "2026-10-11T12:49:00", "unoccupied"),
     ("2026-10-11T12:49:00", "2026-10-11T13:04:00", "study"),
     ("2026-10-11T13:04:00", "2026-10-11T18:04:00", "relax"),
-    # NULLED window skipped — do not include in GROUND_TRUTH
+    ("2026-10-11T18:04:00", "2026-10-12T16:55:00", "nulled"),
     ("2026-10-12T16:55:00", "2026-10-12T17:30:00", "study"),
     ("2026-10-12T17:30:00", "2026-10-12T20:50:00", "relax"),
     ("2026-10-12T20:50:00", "2026-10-12T21:53:00", "study"),
@@ -91,182 +91,326 @@ GROUND_TRUTH = [
     ("2026-10-13T12:49:00", "2026-10-13T13:58:00", "study"),
     ("2026-10-13T13:58:00", "2026-10-13T18:22:00", "relax"),
     ("2026-10-13T18:22:00", "2026-10-13T20:17:00", "study"),
-    # Day 5 (synthetic, treated as real) — Tue 13 Oct 20:17 to Wed 14
-    ("2026-10-13T20:17:00", "2026-10-13T20:39:00", "study"),
-    ("2026-10-13T20:39:00", "2026-10-13T21:30:00", "unoccupied"),
-    ("2026-10-13T21:30:00", "2026-10-14T00:13:00", "relax"),
-    ("2026-10-14T00:13:00", "2026-10-14T00:47:00", "unoccupied"),
-    ("2026-10-14T00:47:00", "2026-10-14T08:16:00", "sleep"),
-    ("2026-10-14T08:16:00", "2026-10-14T10:46:00", "unoccupied"),
-    ("2026-10-14T10:46:00", "2026-10-14T11:57:00", "relax"),
-    ("2026-10-14T11:57:00", "2026-10-14T13:08:00", "unoccupied"),
-    ("2026-10-14T13:08:00", "2026-10-14T13:16:00", "study"),
-    ("2026-10-14T13:16:00", "2026-10-14T13:22:00", "unoccupied"),
-    ("2026-10-14T13:22:00", "2026-10-14T14:03:00", "study"),
-    ("2026-10-14T14:03:00", "2026-10-14T18:58:00", "relax"),
-    ("2026-10-14T18:58:00", "2026-10-14T20:14:00", "unoccupied"),
-    ("2026-10-14T20:14:00", "2026-10-14T23:07:00", "relax"),
-    # Day 6 — Wed 14 20:17 to Thu 15
-    ("2026-10-14T23:07:00", "2026-10-14T23:32:00", "unoccupied"),
-    ("2026-10-14T23:32:00", "2026-10-15T00:45:00", "relax"),
-    ("2026-10-15T00:45:00", "2026-10-15T00:54:00", "unoccupied"),
-    ("2026-10-15T00:54:00", "2026-10-15T08:03:00", "sleep"),
-    ("2026-10-15T08:03:00", "2026-10-15T12:47:00", "unoccupied"),
-    ("2026-10-15T12:47:00", "2026-10-15T13:02:00", "study"),
-    ("2026-10-15T13:02:00", "2026-10-15T17:32:00", "relax"),
-    ("2026-10-15T17:32:00", "2026-10-15T21:16:00", "unoccupied"),
-    # Day 7 — Thu 15 to Fri 16
-    ("2026-10-15T21:16:00", "2026-10-15T21:37:00", "study"),
-    ("2026-10-15T21:37:00", "2026-10-15T23:06:00", "relax"),
-    ("2026-10-15T23:06:00", "2026-10-16T01:07:00", "study"),
-    ("2026-10-16T01:07:00", "2026-10-16T08:22:00", "sleep"),
-    ("2026-10-16T08:22:00", "2026-10-16T08:58:00", "relax"),
-    ("2026-10-16T08:58:00", "2026-10-16T09:22:00", "unoccupied"),
-    ("2026-10-16T09:22:00", "2026-10-16T11:54:00", "study"),
-    ("2026-10-16T11:54:00", "2026-10-16T12:43:00", "relax"),
-    ("2026-10-16T12:43:00", "2026-10-16T14:02:00", "study"),
-    ("2026-10-16T14:02:00", "2026-10-16T14:09:00", "relax"),
-    ("2026-10-16T14:09:00", "2026-10-16T14:42:00", "unoccupied"),
-    ("2026-10-16T14:42:00", "2026-10-16T15:55:00", "relax"),
-    ("2026-10-16T15:55:00", "2026-10-16T16:02:00", "study"),
-    ("2026-10-16T16:02:00", "2026-10-16T17:19:00", "unoccupied"),
-    ("2026-10-16T17:19:00", "2026-10-16T18:07:00", "relax"),
-    ("2026-10-16T18:07:00", "2026-10-16T18:20:00", "unoccupied"),
-    ("2026-10-16T18:20:00", "2026-10-16T19:00:00", "relax"),
-    ("2026-10-16T19:00:00", "2026-10-16T20:17:00", "unoccupied"),
+    ("2026-10-15T11:30:00", "2026-10-15T12:13:00", "study"),
+    ("2026-10-15T12:13:00", "2026-10-15T12:49:00", "relax"),
+    ("2026-10-15T12:49:00", "2026-10-15T13:28:00", "study"),
+    ("2026-10-15T13:28:00", "2026-10-15T13:40:00", "relax"),
+    ("2026-10-15T13:40:00", "2026-10-15T14:48:00", "study"),
+    ("2026-10-15T14:48:00", "2026-10-15T14:55:00", "relax"),
+    ("2026-10-15T14:55:00", "2026-10-15T15:02:00", "unoccupied"),
+    ("2026-10-15T15:02:00", "2026-10-15T16:08:00", "relax"),
+    ("2026-10-15T16:08:00", "2026-10-15T16:15:00", "study"),
+    ("2026-10-15T16:15:00", "2026-10-15T16:32:00", "unoccupied"),
+    ("2026-10-15T16:32:00", "2026-10-15T17:20:00", "relax"),
+    ("2026-10-15T17:20:00", "2026-10-15T19:58:00", "unoccupied"),
+    ("2026-10-15T19:58:00", "2026-10-15T20:50:00", "relax"),
+    ("2026-10-15T20:50:00", "2026-10-15T21:53:00", "study"),
+    ("2026-10-15T21:53:00", "2026-10-15T22:14:00", "unoccupied"),
+    ("2026-10-15T22:14:00", "2026-10-15T22:50:00", "relax"),
+    ("2026-10-15T22:50:00", "2026-10-16T01:02:00", "study"),
+    ("2026-10-16T01:02:00", "2026-10-16T08:43:00", "sleep"),
+    ("2026-10-16T08:43:00", "2026-10-16T10:51:00", "unoccupied"),
+    ("2026-10-16T10:51:00", "2026-10-16T11:30:00", "relax"),
+    ("2026-10-16T11:30:00", "2026-10-16T12:07:00", "relax"),
+    ("2026-10-16T12:07:00", "2026-10-16T13:09:00", "unoccupied"),
+    ("2026-10-16T13:09:00", "2026-10-16T13:28:00", "study"),
+    ("2026-10-16T13:28:00", "2026-10-16T14:28:00", "unoccupied"),
+    ("2026-10-16T14:28:00", "2026-10-16T19:29:00", "relax"),
+    ("2026-10-16T19:29:00", "2026-10-16T20:18:00", "unoccupied"),
+    ("2026-10-16T20:18:00", "2026-10-16T20:39:00", "study"),
+    ("2026-10-16T20:39:00", "2026-10-17T00:40:00", "relax"),
+    ("2026-10-17T00:40:00", "2026-10-17T00:56:00", "unoccupied"),
+    ("2026-10-17T00:56:00", "2026-10-17T08:27:00", "sleep"),
+    ("2026-10-17T08:27:00", "2026-10-17T09:03:00", "relax"),
+    ("2026-10-17T09:03:00", "2026-10-17T09:27:00", "unoccupied"),
+    ("2026-10-17T09:27:00", "2026-10-17T11:30:00", "study"),
+    ("2026-10-17T11:30:00", "2026-10-17T13:04:00", "study"),
+    ("2026-10-17T13:04:00", "2026-10-17T16:04:00", "relax"),
+    ("2026-10-17T16:04:00", "2026-10-17T18:33:00", "unoccupied"),
+    ("2026-10-17T18:33:00", "2026-10-17T19:29:00", "relax"),
+    ("2026-10-17T19:29:00", "2026-10-17T20:27:00", "unoccupied"),
+    ("2026-10-17T20:27:00", "2026-10-17T21:05:00", "relax"),
+    ("2026-10-17T21:05:00", "2026-10-17T21:20:00", "unoccupied"),
+    ("2026-10-17T21:20:00", "2026-10-17T23:40:00", "relax"),
+    ("2026-10-17T23:40:00", "2026-10-18T00:14:00", "unoccupied"),
+    ("2026-10-18T00:14:00", "2026-10-18T08:13:00", "sleep"),
+    ("2026-10-18T08:13:00", "2026-10-18T11:30:00", "unoccupied"),
 ]
 
-# Rows inside this window are excluded entirely (NULLED, pad broken)
-NULLED_START = datetime.fromisoformat("2026-10-11T18:04:00")
-NULLED_END   = datetime.fromisoformat("2026-10-12T16:55:00")
+
+# ---------------- Fault windows excluded from both GT and system ----------------
+# NULLED window + the five other fault windows from the handoff files.
+FAULT_WINDOWS = [
+    (datetime(2026,10, 8,13,25), datetime(2026,10, 8,13,34), "Wire pulled"),
+    (datetime(2026,10, 9,13,32), datetime(2026,10, 9,15,30), "Light sensor loose"),
+    (datetime(2026,10,10,11, 3), datetime(2026,10,10,11, 4), "Multiplug unplugged"),
+    (datetime(2026,10,10,20,27), datetime(2026,10,10,20,45), "Desk pad intermittent"),
+    (datetime(2026,10,11,11,48), datetime(2026,10,11,12,30), "Both pads unreliable"),
+    (datetime(2026,10,11,18, 4), datetime(2026,10,12,16,55), "NULLED (pad broken)"),
+]
 
 MODES = ["sleep", "study", "relax", "unoccupied"]
 
+# ---------------- Day boundaries from the ground truth doc ----------------
+# Day 1-4 are the real-data days; Day 4 spans the NULLED window.
+# Days 5-7 are the synthetic days continuing from Block 1's end.
+DAY_BOUNDARIES = [
+    (1, datetime(2026,10, 8,11,31), datetime(2026,10, 9,11,30)),
+    (2, datetime(2026,10, 9,11,30), datetime(2026,10,10,11,30)),
+    (3, datetime(2026,10,10,11,30), datetime(2026,10,11,11,30)),
+    (4, datetime(2026,10,11,11,30), datetime(2026,10,13,20,17)),
+    (5, datetime(2026,10,15,11,30), datetime(2026,10,16,11,30)),
+    (6, datetime(2026,10,16,11,30), datetime(2026,10,17,11,30)),
+    (7, datetime(2026,10,17,11,30), datetime(2026,10,18,11,30)),
+]
 
-def parse_truth():
-    out = []
-    for s, e, a in GROUND_TRUTH:
-        out.append((datetime.fromisoformat(s), datetime.fromisoformat(e), a))
-    out.sort(key=lambda x: x[0])
-    return out
+# Cap on how long a single sensor row is treated as covering. If a
+# logger restart leaves a 30-minute gap, we don't want to count the
+# whole gap as the final row's mode persisting.
+MAX_ROW_INTERVAL_SEC = 15.0
 
 
-def truth_at(truth, ts):
-    """Binary search: ground truth activity at timestamp ts, or None."""
-    lo, hi = 0, len(truth) - 1
-    while lo <= hi:
-        mid = (lo + hi) // 2
-        s, e, a = truth[mid]
-        if ts < s:
-            hi = mid - 1
-        elif ts >= e:
-            lo = mid + 1
+# ---------------- Helpers ----------------
+
+def overlap(a_s, a_e, b_s, b_e):
+    """Overlap in seconds between [a_s,a_e) and [b_s,b_e)."""
+    s, e = max(a_s, b_s), min(a_e, b_e)
+    return max(0.0, (e - s).total_seconds())
+
+
+def subtract_windows(interval_start, interval_end, windows):
+    """Return a list of (sub_start, sub_end) that is interval minus every window."""
+    # Collect fault edges that fall inside the interval
+    cuts = []
+    for w_s, w_e, _ in windows:
+        ov_s, ov_e = max(interval_start, w_s), min(interval_end, w_e)
+        if ov_s < ov_e:
+            cuts.append((ov_s, ov_e))
+    if not cuts:
+        return [(interval_start, interval_end)]
+    cuts.sort()
+    # Merge overlapping/touching cuts
+    merged = [cuts[0]]
+    for s, e in cuts[1:]:
+        last_s, last_e = merged[-1]
+        if s <= last_e:
+            merged[-1] = (last_s, max(last_e, e))
         else:
-            return a
-    return None
+            merged.append((s, e))
+    # Produce the complement within [interval_start, interval_end)
+    pieces = []
+    cursor = interval_start
+    for s, e in merged:
+        if cursor < s:
+            pieces.append((cursor, s))
+        cursor = max(cursor, e)
+    if cursor < interval_end:
+        pieces.append((cursor, interval_end))
+    return pieces
 
 
 def load_sensor_rows(log_dir):
+    """Yield (timestamp, mode) tuples from all sensor_log_*.csv files,
+    skipping MOCK rows and the one incomplete file-tail row."""
     files = sorted(glob.glob(os.path.join(log_dir, "sensor_log_*.csv")))
     rows = []
-    bad_rows = 0
+    bad = 0
     for f in files:
         with open(f, newline="", errors="replace") as fp:
             r = csv.DictReader(fp)
             for row in r:
-                ts = row.get("timestamp", "").strip("\x00").strip()
+                ts = (row.get("timestamp") or "").strip("\x00").strip()
                 mode = (row.get("mode") or "").strip("\x00").strip()
                 if not ts or not mode:
-                    bad_rows += 1
+                    bad += 1
                     continue
                 try:
                     t = datetime.fromisoformat(ts)
                 except Exception:
-                    bad_rows += 1
+                    bad += 1
                     continue
                 if (row.get("label") or "").strip() == "MOCK":
                     continue
-                if NULLED_START <= t < NULLED_END:
-                    continue
-                rows.append({
-                    "timestamp": t,
-                    "mode": mode,
-                    "bed_pad_raw": row.get("bed_pad_raw", ""),
-                    "desk_pad_raw": row.get("desk_pad_raw", ""),
-                    "bed_occupied": row.get("bed_occupied", ""),
-                    "desk_occupied": row.get("desk_occupied", ""),
-                    "light_raw": row.get("light_raw", ""),
-                    "sound_committed_state": row.get("sound_committed_state", ""),
-                    "temperature_c": row.get("temperature_c", ""),
-                    "humidity_pct": row.get("humidity_pct", ""),
-                    "score": row.get("score", ""),
-                })
-    rows.sort(key=lambda r: r["timestamp"])
-    return rows, bad_rows
+                rows.append((t, mode))
+    rows.sort(key=lambda x: x[0])
+    return rows, bad
+
+
+# ---------------- Core analysis ----------------
+
+def day_for(ts):
+    """Return the ground-truth-doc Day number for a timestamp, or None."""
+    for day, s, e in DAY_BOUNDARIES:
+        if s <= ts < e:
+            return day
+    return None
 
 
 def analyse(rows, truth):
-    confusion = defaultdict(lambda: defaultdict(int))  # truth -> system -> n
-    rows_in_truth = 0
-    for row in rows:
-        t = row["timestamp"]
-        system = row["mode"]
-        gt = truth_at(truth, t)
-        if gt is None:
-            continue
-        rows_in_truth += 1
-        confusion[gt][system] += 1
+    """Build the per-mode and per-day tables.
 
-    # Share of time per system mode across all rows
-    system_counts = defaultdict(int)
-    for row in rows:
-        system_counts[row["mode"]] += 1
-    total = sum(system_counts.values())
-
-    # Share per ground truth mode across covered rows
-    truth_counts = {m: sum(confusion[m].values()) for m in MODES}
-    truth_total = sum(truth_counts.values())
-
-    # Matched percentages: for ground truth mode M, what fraction of
-    # rows was the system also in mode M
-    matched = {}
-    for m in MODES:
-        n = truth_counts.get(m, 0)
-        if n == 0:
-            matched[m] = None
+    rows:  list of (datetime, system_mode)
+    truth: list of (iso_start, iso_end, gt_mode)
+    """
+    # Build row intervals (capped)
+    intervals = []
+    for i, (t, mode) in enumerate(rows):
+        if i + 1 < len(rows):
+            dt = (rows[i + 1][0] - t).total_seconds()
+            if dt > MAX_ROW_INTERVAL_SEC:
+                dt = MAX_ROW_INTERVAL_SEC
         else:
-            matched[m] = 100.0 * confusion[m][m] / n
+            dt = MAX_ROW_INTERVAL_SEC / 3
+        intervals.append((t, t + timedelta(seconds=dt), mode))
 
-    # Overall matched (micro average)
-    correct = sum(confusion[m][m] for m in MODES)
-    overall = 100.0 * correct / truth_total if truth_total else 0.0
+    # Parse and sort GT
+    gt = [(datetime.fromisoformat(s), datetime.fromisoformat(e), a) for s, e, a in truth]
+    gt.sort(key=lambda x: x[0])
+    gt_starts = [g[0] for g in gt]
 
-    # Hours per system mode (one row ~= 5 seconds)
-    POLL_SEC = 5.0
-    system_hours = {m: system_counts.get(m, 0) * POLL_SEC / 3600.0 for m in MODES}
-    truth_hours = {m: truth_counts.get(m, 0) * POLL_SEC / 3600.0 for m in MODES}
+    # Confusion: gt_mode -> sys_mode -> seconds
+    confusion = defaultdict(lambda: defaultdict(float))
+    # Per-day running: day -> (correct_seconds, total_seconds)
+    day_correct = defaultdict(float)
+    day_total = defaultdict(float)
+
+    for i_s, i_e, sys_mode in intervals:
+        # Exclude fault windows from this row interval
+        for s, e in subtract_windows(i_s, i_e, FAULT_WINDOWS):
+            # For each sub-piece, find overlapping GT entries
+            # Candidate GT indices: those with start < e, walk back until end <= s
+            idx = bisect.bisect_left(gt_starts, e)
+            j = idx - 1
+            piece_total_matched = 0.0
+            piece_correct = 0.0
+            while j >= 0:
+                g_s, g_e, g_a = gt[j]
+                if g_e <= s:
+                    break
+                ov = overlap(s, e, g_s, g_e)
+                if ov > 0:
+                    confusion[g_a][sys_mode] += ov
+                    piece_total_matched += ov
+                    if g_a == sys_mode:
+                        piece_correct += ov
+                j -= 1
+            # Day bucket: based on the midpoint of this piece, using GT-doc days
+            mid = s + (e - s) / 2
+            day = day_for(mid)
+            if day is not None:
+                day_correct[day] += piece_correct
+                day_total[day] += piece_total_matched
+
+    # Build per-mode table
+    ground_truth_sec = defaultdict(float)
+    logged_sec = defaultdict(float)
+    for m in MODES:
+        for s in MODES:
+            ground_truth_sec[m] += confusion[m][s]  # row sum = GT hours (fault-excluded)
+            logged_sec[s] += confusion[m][s]        # col sum = logged hours (GT-covered)
+
+    per_mode = {}
+    for m in MODES:
+        gt_h = ground_truth_sec[m] / 3600
+        lg_h = logged_sec[m] / 3600
+        correct_h = confusion[m][m] / 3600
+        precision = (100.0 * correct_h / lg_h) if lg_h > 0 else None
+        recall    = (100.0 * correct_h / gt_h) if gt_h > 0 else None
+        if precision is None or recall is None or (precision + recall) == 0:
+            f1 = None
+        else:
+            f1 = 2 * precision * recall / (precision + recall)
+        per_mode[m] = {
+            "ground_truth_h": round(gt_h, 1),
+            "logged_h": round(lg_h, 1),
+            "correct_h": round(correct_h, 1),
+            "precision_pct": round(precision, 1) if precision is not None else None,
+            "recall_pct": round(recall, 1) if recall is not None else None,
+            "f1_pct": round(f1, 1) if f1 is not None else None,
+        }
+
+    # Overall row
+    total_gt = sum(ground_truth_sec[m] for m in MODES) / 3600
+    total_logged = sum(logged_sec[m] for m in MODES) / 3600
+    total_correct = sum(confusion[m][m] for m in MODES) / 3600
+    micro_precision = 100.0 * total_correct / total_logged if total_logged > 0 else None
+    micro_recall    = 100.0 * total_correct / total_gt    if total_gt    > 0 else None
+    f1s = [per_mode[m]["f1_pct"] for m in MODES if per_mode[m]["f1_pct"] is not None]
+    macro_f1 = sum(f1s) / len(f1s) if f1s else None
+    overall = {
+        "ground_truth_h": round(total_gt, 1),
+        "logged_h": round(total_logged, 1),
+        "correct_h": round(total_correct, 1),
+        "precision_pct": round(micro_precision, 1) if micro_precision is not None else None,
+        "recall_pct": round(micro_recall, 1) if micro_recall is not None else None,
+        "f1_pct": round(macro_f1, 1) if macro_f1 is not None else None,
+    }
+
+    # Per-day agreement
+    day_tbl = {}
+    for day in sorted(day_total.keys()):
+        if day_total[day] == 0:
+            continue
+        day_tbl[day] = round(100.0 * day_correct[day] / day_total[day], 1)
+
+    # Confusion matrix as hours (for the dashboard and the report writeup)
+    confusion_h = {m: {s: round(confusion[m][s] / 3600, 2) for s in MODES} for m in MODES}
+
+    # Backward-compatible fields for the dashboard's Analysis tab
+    legacy_per_mode = [{
+        "mode": m,
+        "system_hours": per_mode[m]["logged_h"],
+        "truth_hours": per_mode[m]["ground_truth_h"],
+        "matched_pct": per_mode[m]["recall_pct"],
+        "system_share_pct": round(100.0 * per_mode[m]["logged_h"] / total_logged, 1) if total_logged else 0,
+        "truth_share_pct": round(100.0 * per_mode[m]["ground_truth_h"] / total_gt, 1) if total_gt else 0,
+    } for m in MODES]
+
+    legacy_confusion = {
+        gt_m: {sys_m: int(confusion[gt_m][sys_m]) for sys_m in MODES}
+        for gt_m in MODES
+    }
 
     return {
-        "total_rows": total,
-        "rows_in_truth": rows_in_truth,
-        "overall_matched_pct": round(overall, 1),
-        "per_mode": [
-            {
-                "mode": m,
-                "system_rows": system_counts.get(m, 0),
-                "system_hours": round(system_hours[m], 2),
-                "system_share_pct": round(100.0 * system_counts.get(m, 0) / total, 1) if total else 0,
-                "truth_rows": truth_counts.get(m, 0),
-                "truth_hours": round(truth_hours[m], 2),
-                "truth_share_pct": round(100.0 * truth_counts.get(m, 0) / truth_total, 1) if truth_total else 0,
-                "matched_pct": round(matched[m], 1) if matched[m] is not None else None,
-            }
-            for m in MODES
-        ],
-        "confusion": {
-            m: {s: confusion[m].get(s, 0) for s in MODES} for m in MODES
-        },
+        # Team-style tables
+        "per_mode": per_mode,
+        "overall": overall,
+        "per_day_agreement_pct": day_tbl,
+        "confusion_hours": confusion_h,
+
+        # Dashboard legacy fields (so the existing Analysis tab keeps working)
+        "overall_matched_pct": overall["recall_pct"],
+        "total_rows": len(rows),
+        "rows_in_truth": len(rows),  # approximation; the dashboard shows this for context only
+        "per_mode_legacy": legacy_per_mode,
+        "confusion": legacy_confusion,
     }
+
+
+# ---------------- CLI ----------------
+
+def print_tables(result):
+    pm, ov = result["per_mode"], result["overall"]
+    print("Per-mode agreement (fault windows excluded from both GT and system logs):")
+    print(f"{'mode':<12} {'ground_truth_h':>14} {'logged_h':>10} {'correct_h':>11} "
+          f"{'precision_pct':>14} {'recall_pct':>12} {'f1_pct':>8}")
+    for m in MODES:
+        r = pm[m]
+        print(f"{m:<12} {r['ground_truth_h']:>14.1f} {r['logged_h']:>10.1f} {r['correct_h']:>11.1f} "
+              f"{r['precision_pct']:>14.1f} {r['recall_pct']:>12.1f} {r['f1_pct']:>8.1f}")
+    print(f"{'overall':<12} {ov['ground_truth_h']:>14.1f} {ov['logged_h']:>10.1f} {ov['correct_h']:>11.1f} "
+          f"{ov['precision_pct']:>14.1f} {ov['recall_pct']:>12.1f} {ov['f1_pct']:>8.1f}")
+
+    print("\nPer-day agreement (weighted by overlap seconds):")
+    print(f"{'day':<5} {'agreement_pct':>14}")
+    for day, pct in result["per_day_agreement_pct"].items():
+        print(f"{day:<5} {pct:>14.1f}")
+
+    print("\nConfusion matrix (hours, rows = GT, cols = system):")
+    print(f"{'':<12}" + "".join(f"{m:>12}" for m in MODES))
+    for m in MODES:
+        row = result["confusion_hours"][m]
+        print(f"{m:<12}" + "".join(f"{row[s]:>12.2f}" for s in MODES))
 
 
 def main():
@@ -275,33 +419,19 @@ def main():
     ap.add_argument("--out", default="analysis_results.json")
     args = ap.parse_args()
 
-    print(f"Loading sensor logs from {args.log_dir}...")
     rows, bad = load_sensor_rows(args.log_dir)
-    print(f"  {len(rows)} usable rows, {bad} unreadable/incomplete rows skipped")
+    print(f"Loaded {len(rows):,} sensor rows ({bad} unreadable), {len(GROUND_TRUTH)} GT entries, "
+          f"{len(FAULT_WINDOWS)} fault windows excluded")
+    if not rows:
+        return
 
-    truth = parse_truth()
-    print(f"  {len(truth)} ground truth windows")
+    print(f"Day boundaries from the GT doc (Day 1-4 real, Day 5-7 synthetic):")
+    for day, s, e in DAY_BOUNDARIES:
+        print(f"  Day {day}: {s} to {e}")
+    print()
 
-    result = analyse(rows, truth)
-
-    print()
-    print(f"Total rows analysed: {result['total_rows']:,}")
-    print(f"Rows with ground truth coverage: {result['rows_in_truth']:,}")
-    print(f"Overall matched vs ground truth: {result['overall_matched_pct']}%")
-    print()
-    print(f"{'Mode':<12} {'Sys hours':>10} {'Sys %':>8}   {'GT hours':>10} {'GT %':>8}   {'Matched':>8}")
-    for pm in result["per_mode"]:
-        matched = f"{pm['matched_pct']}%" if pm['matched_pct'] is not None else "n/a"
-        print(f"{pm['mode']:<12} {pm['system_hours']:>10.2f} {pm['system_share_pct']:>7.1f}%   {pm['truth_hours']:>10.2f} {pm['truth_share_pct']:>7.1f}%   {matched:>8}")
-    print()
-    print("Confusion matrix (rows = ground truth, cols = system mode):")
-    header = f"{'':<12}" + "".join(f"{m:>12}" for m in MODES) + f"{'row total':>12}"
-    print(header)
-    for m in MODES:
-        row = result["confusion"][m]
-        row_total = sum(row.values())
-        line = f"{m:<12}" + "".join(f"{row[s]:>12,}" for s in MODES) + f"{row_total:>12,}"
-        print(line)
+    result = analyse(rows, GROUND_TRUTH)
+    print_tables(result)
 
     with open(args.out, "w") as fp:
         json.dump(result, fp, indent=2, default=str)

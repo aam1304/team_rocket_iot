@@ -252,10 +252,13 @@ async function loadAnalysis() {
       return;
     }
     const a = d.data;
+    const ov = a.overall || {};
     document.getElementById('analysis-summary').innerHTML =
-      `<strong style="color:var(--fg); font-size: 18px;">${a.overall_matched_pct}%</strong> overall match against the hand-logged ground truth, across ${a.rows_in_truth.toLocaleString()} rows (${a.total_rows.toLocaleString()} usable rows after excluding the NULLED window and the incomplete file-tail row).`;
+      `<strong style="color:var(--fg); font-size: 18px;">${ov.recall_pct ?? a.overall_matched_pct}%</strong> overall agreement against the hand-logged ground truth. ` +
+      `${ov.correct_h?.toFixed?.(1) ?? '?'} of ${ov.ground_truth_h?.toFixed?.(1) ?? '?'} ground truth hours matched by the system (${ov.logged_h?.toFixed?.(1) ?? '?'} logged hours total; macro F1 ${ov.f1_pct ?? '?'}%). Fault windows are excluded from both sides.`;
     const tb = document.getElementById('per-mode-body');
-    tb.innerHTML = a.per_mode.map(pm => `<tr>
+    const perMode = a.per_mode_legacy || a.per_mode || [];
+    tb.innerHTML = perMode.map(pm => `<tr>
       <td><span class="mode-dot" style="background:${MODE_COLORS[pm.mode]}"></span>${pm.mode}</td>
       <td class="num">${pm.system_hours.toFixed(1)}</td>
       <td class="num">${pm.truth_hours.toFixed(1)}</td>
